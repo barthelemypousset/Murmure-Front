@@ -161,10 +161,10 @@ export default function LessonScreen({ navigation, route }) {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${userToken}`,
               },
               body: JSON.stringify({
                 progressNb: chapter.index,
-                token: userToken,
               }),
             });
             const data = await response.json();

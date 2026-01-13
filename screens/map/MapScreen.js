@@ -62,16 +62,6 @@ export default function MapScreen({ navigation }) {
   };
 
   useEffect(() => {
-    fetch(`${BACKEND_ADDRESS}/chapters/`)
-      .then((res) => res.json())
-      .then((data) => {
-        //console.log(data.chapters);
-        dispatch(setAllChapters(data.chapters));
-        console.log('dispatched chapters');
-      });
-  }, []);
-
-  useEffect(() => {
     if (userProgressNb === 0) {
       setShowWelcomeModal(true);
     }

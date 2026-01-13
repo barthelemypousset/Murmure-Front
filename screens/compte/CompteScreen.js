@@ -43,7 +43,10 @@ export default function CompteScreen({ navigation }) {
 
     fetch(`${BACKEND_ADDRESS}/users/updateUsername`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userToken}`,
+      },
       body: JSON.stringify({ token: userToken, newUsername }),
     })
       .then((res) => res.json())
@@ -94,8 +97,10 @@ export default function CompteScreen({ navigation }) {
   const confirmDeleteAccount = () => {
     fetch(`${BACKEND_ADDRESS}/users/deleteUser`, {
       method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: userToken }),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userToken}`,
+      },
     })
       .then((res) => res.json())
       .then((data) => {
