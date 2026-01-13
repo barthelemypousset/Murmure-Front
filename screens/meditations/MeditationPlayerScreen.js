@@ -53,11 +53,8 @@ export default function MeditationPlayer({ route, navigation }) {
       return;
     }
 
-    fetch(`${BACKEND_ADDRESS}/meditation/player`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ theme, mode, duration }),
-    })
+    // requeter les meditation avec un query parameter
+    fetch(`${BACKEND_ADDRESS}/meditations/player?theme=${theme}&mode=${mode}&duration=${duration}`)
       .then((res) => res.json())
       .then(async (data) => {
    
