@@ -27,7 +27,7 @@ const PulsingButton = ({ onPress, color, style, buttonScale = 1 }) => {
       Animated.timing(animation, {
         toValue: 1,
         duration: 2000, // Durée d'un battement (2s)
-        useNativeDriver: true, // Important pour la fluidité sur mobile
+        useNativeDriver: Platform.OS !== 'web', // Important pour la fluidité sur mobile
       })
     ).start();
   }, [animation]);
@@ -94,8 +94,11 @@ const PulsingButton = ({ onPress, color, style, buttonScale = 1 }) => {
 };
 
 export default function HomeScreen({ navigation }) {
+  const dispatch = useDispatch();
   const insets = useSafeAreaInsets();
+
   const backgroundImage = require('../../assets/homescreenCadre.png');
+
   const { getPos, scale, originalW, originalH } = useResponsiveImagePosition(backgroundImage); // Utilisation du hook amélioré
   // getPos pour positionner, scale pour adapter les tailles
 
@@ -125,20 +128,6 @@ export default function HomeScreen({ navigation }) {
   /// FORMULE : Math.max(insets.top - 16, 10)
   /// EX: style={[styles.compteButton, { top: Math.max(insets.top - 16, 10), right: 50 }]}
 
-  // 1. Log à chaque rendu (très important pour voir les mises à jour d'état)
-  console.log(
-    `[HomeScreen -- Infobulle] 🎨 Rendu. État bulle: visible=${infoBubble.visible}, msg="${infoBubble.message}"`
-  );
-
-  useEffect(() => {
-    // console.log('[HomeScreen -- Infobulle] 🚀 useEffect (Mount) -> Lancement de checkVisitCount');
-    checkVisitCount();
-  }, []);
-
-  // --- CODE POUR CHARGER LES CHAPITRES DEPUIS LE BACKEND AU MONTAGE DE L'ÉCRAN
-
-  const dispatch = useDispatch();
-
   useEffect(() => {
     // Chargement des chapitres depuis le backend
     fetch(`${BACKEND_ADDRESS}/chapters/`)
@@ -157,26 +146,18 @@ export default function HomeScreen({ navigation }) {
       });
   }, []);
 
-  // --- NOUVEAU CODE - Basé sur le statut de connexion de l'utilisateur CONNECTED VS NON CONNECTED
-
   useEffect(() => {
     checkVisitCount(); // Appel initial pour vérifier le statut de visite
   }, [isConnected]); // Dépendance sur isConnected pour réagir aux changements de statut
 
   const checkVisitCount = () => {
-    // Utiliser le statut de connexion depuis Redux au lieu d'AsyncStorage
-
     if (!isConnected) {
-      // Si l'utilisateur n'est PAS connecté -> message de bienvenue
-      // console.log('[HomeScreen -- Infobulle]  Utilisateur NON connecté -> Message de bienvenue');
       setInfoBubble({
         visible: true,
         message:
           "✨ Bienvenue sur Murmure! ✨\n\nSouhaitez vous me parler ou commencer votre parcours?\nJe vous invite à cliquer sur l'étagère ou la porte vers le jardin.\n\n À très vite ! 😊",
       });
     } else {
-      // Si l'utilisateur EST connecté -> message "ravi de vous revoir"
-      // console.log('[HomeScreen -- Infobulle] ✅ Utilisateur connecté -> Message "Ravi de vous revoir"');
       setInfoBubble({
         visible: true,
         message: `✨ Ravi de vous revoir ${username}! ✨\n\nPrêt à continuer?\n\nSouhaitez-vous continuer vers votre parcours ou initier une séance de relaxation?\n\nOu peut-être préférez-vous me parler?`,
@@ -185,7 +166,6 @@ export default function HomeScreen({ navigation }) {
   };
 
   const closeInfoBubble = () => {
-    // console.log('[HomeScreen -- Infobulle] 🔇 Appel de closeInfoBubble -> Reset du state');
     setInfoBubble({ visible: false, message: '' });
   };
 
