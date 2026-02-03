@@ -76,10 +76,7 @@ const InfoBubble = ({ message, visible, onClose }) => {
 const styles = StyleSheet.create({
   infoBubbleContainer: {
     position: 'absolute',
-    top: Platform.select({
-      ios: 50, // On descend plus bas sur iOS (teste 80, 90 ou 100)
-      android: 60, // On garde ta valeur actuelle pour Android
-    }),
+    padding:10,
     zIndex: 1000,
     width: '100%', // Prend 100% de la largeur disponible dans le parent (qui a déjà du padding)
     alignSelf: 'center', // S'assure d'être bien centré

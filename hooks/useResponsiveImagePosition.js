@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Image, useWindowDimensions } from 'react-native';
+import { Image } from 'react-native';
+import { useAppDimensions } from '../contexts/DimensionsContext';
 
 // --- HOOK DE POSITIONNEMENT RESPONSIVE ---
 // Permet de positionner des éléments de façon responsive sur une image
 const useResponsiveImagePosition = (imageSource) => {
-  const { width: screenW, height: screenH } = useWindowDimensions();
+  const { width: screenW, height: screenH } = useAppDimensions();
   const [imageDimensions, setImageDimensions] = useState({ width: 1080, height: 1920 });
 
   useEffect(() => {

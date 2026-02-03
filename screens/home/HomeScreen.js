@@ -7,92 +7,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Button from '../../components/Button';
 import ParrotChatBtn from '../../components/ParrotChatBtn'; // Bouton perroquet pour chat
-import { useFocusEffect } from '@react-navigation/native'; // Pour gérer le focus de l'écran
-
-// import pour les infobulles
-import InfoBubble from '../../components/InfoBulleHome'; // composant infobulle personnalisé
-import { setAllChapters } from '../../reducers/chapters';
-import useResponsiveImagePosition from '../../hooks/useResponsiveImagePosition'; // Hook de positionnement responsive
-
-// --- 2. LE COMPOSANT BOUTON PULSANT ---
-
-// Ce composant gère sa propre animation pour être réutilisable.
-const PulsingButton = ({ onPress, color, style, buttonScale = 1 }) => {
-  // Valeur animée qui ira de 0 à 1 en boucle
-  const animation = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    // Définition de la boucle d'animation
-    Animated.loop(
-      Animated.timing(animation, {
-        toValue: 1,
-        duration: 2000, // Durée d'un battement (2s)
-        useNativeDriver: Platform.OS !== 'web', // Important pour la fluidité sur mobile
-      })
-    ).start();
-  }, [animation]);
-
-  // Interpolation : Transformer la valeur 0->1 en Échelle (taille)
-  const scaleAnim = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 2.5], // Le cercle grandit de 1x à 2.5x sa taille
-  });
-
-  // Interpolation : Transformer la valeur 0->1 en Opacité
-  const opacityAnim = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 0], // L'opacité passe de 1 à invisible (0)
-  });
-
-  // Couleur dynamique basée sur la prop 'color'
-  const rippleColor = color || '#FF5722';
-
-  // RETURN DES PULSING BUTTON
-  return (
-    <View
-      style={[
-        styles.buttonWrapper,
-        style,
-        {
-          width: 70 * buttonScale, // Taille augmentée : 50 → 70
-          height: 70 * buttonScale,
-        },
-      ]}
-    >
-      {/* L'anneau animé en arrière-plan */}
-      <Animated.View
-        style={[
-          styles.pulseRing,
-          {
-            backgroundColor: rippleColor,
-            width: 70 * buttonScale, // Taille augmentée : 50 → 70
-            height: 70 * buttonScale,
-            borderRadius: 35 * buttonScale, // Ajusté pour rester circulaire (70/2)
-            // On applique les transformations calculées au-dessus
-            transform: [{ scale: scaleAnim }],
-            opacity: opacityAnim,
-          },
-        ]}
-      />
-
-      {/* Le bouton central cliquable */}
-      <TouchableOpacity
-        activeOpacity={0.7}
-        onPress={onPress}
-        style={[
-          styles.buttonCenter,
-          {
-            backgroundColor: 'transparent',
-            width: 80 * buttonScale, // Taille augmentée : 40 → 55
-            height: 80 * buttonScale,
-            borderRadius: 80 * buttonScale, // Ajusté pour rester circulaire (55/2)
-          },
-        ]}
-      />
-    </View>
-  );
-};
-
+import PulsingButton from '../../components/PulsingButton';
+import useResponsiveImagePosition from '../../hooks/useResponsiveImagePosition';
+import InfoBubble from '../../components/InfoBulleHome';
 export default function HomeScreen({ navigation }) {
   const dispatch = useDispatch();
   const insets = useSafeAreaInsets();
@@ -109,7 +26,7 @@ export default function HomeScreen({ navigation }) {
   const posButton = getPos(originalW * -0.29, originalH * -0.007); // POSITION BOUTON MON COMPTE
 
   // POSITION PERROQUET
-  const parrotPosY = Platform.OS === 'ios' ? 0.11 : 0.140;
+  const parrotPosY = Platform.OS === 'ios' ? 0.11 : 0.14;
   const parrotPosX = Platform.OS === 'ios' ? 0.43 : 0.42;
   const posPerroquet = getPos(originalW * parrotPosX, originalH * parrotPosY);
 
@@ -171,65 +88,57 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <ImageBackground style={styles.background} source={require('../../assets/homescreenCadre.png')} resizeMode="cover">
-      <View style={[styles.container, { top: Math.max(insets.top - 16, 10) }]}>
-        {/* Bulle d'information */}
+      <View style={[styles.mainContainer, { top: Math.max(insets.top - 16, 20) }]}>
+
+        {/* InfoBulle */}
         <InfoBubble message={infoBubble.message} visible={infoBubble.visible} onClose={closeInfoBubble} />
 
-        <View style={styles.labelContainer}>
-          {/* Bouton Mon Compte en haut à gauche */}
-          <Button
-            label={isConnected ? 'Mon compte' : 'Se Connecter'} // Texte dynamique basé sur le redux
-            type="primary"
-            style={[styles.compteButton, posButton]} // Position adaptative : 31px sur notch, min 10px sur anciens iPhone
-            onPress={() => {
-              // console.log("ok le btn mon compte fonctionne!");
-              navigation.navigate('Compte');
-            }}
-          />
+        {/* Mon Compte */}
+        <Button
+          label={isConnected ? 'Mon compte' : 'Se Connecter'} // Texte dynamique basé sur le redux
+          type="primary"
+          style={[styles.compteButton, { left: 10, top: 20 }]} // Position adaptative : 31px sur notch, min 10px sur anciens iPhone
+          onPress={() => {
+            navigation.navigate('Compte');
+          }}
+        />
 
-          <View style={styles.header}>
-            <View style={styles.messageBubble}>
-              {/* Perroquet : ouvre screen Chat */}
-              <ParrotChatBtn
-                onPress={() => {
-                  navigation.navigate('Chat');
-                }}
-                style={[
-                  posPerroquet,
-                  {
-                    width: 100 * scale,
-                    height: 100 * scale,
-                    transform: [{ scaleX: -1 }], // Miroir horizontal
-                  },
-                ]}
-              />
-            </View>
-          </View>
+        {/* Perroquet */}
+        <ParrotChatBtn
+          onPress={() => {
+            navigation.navigate('Chat');
+          }}
+          style={[
+            { right: 40, top: 230 },
+            {
+              width: 100 * scale,
+              height: 100 * scale,
+              transform: [{ scaleX: -1 }], // Miroir horizontal
+            },
+          ]}
+        />
 
-          {/* --- BOUTON 1 (Étagère - Bas à gauche) --- */}
-          <PulsingButton
-            color="#ebaa20ff" // Jaune doux
-            style={posEtagere}
-            buttonScale={scale}
-            onPress={() => {
-              // console.log("ok le lien vers l'etagere fonctionne!");
-              navigation.navigate('Shelves');
-            }}
-            children="Etagère"
-          />
+        {/* Pulsing etagere */}
+        <PulsingButton
+          color="#ebaa20ff" // Jaune doux
+          style={{ left: 40, top: 450 }}
+          buttonScale={scale}
+          onPress={() => {
+            navigation.navigate('Shelves');
+          }}
+          children="Etagère"
+        />
 
-          {/* --- BOUTON 2 (Carte - Bas à droite) --- */}
-          <PulsingButton
-            color="#2aa148ff" // Vert doux
-            style={posCarte}
-            buttonScale={scale}
-            onPress={() => {
-              // console.log("ok le lien vers la map fonctionne!");
-              navigation.navigate('Map');
-            }}
-            children="Carte"
-          />
-        </View>
+        {/* Pulsing Map */}
+        <PulsingButton
+          color="#2aa148ff" // Vert doux
+          style={{ right: 60, top: 450 }}
+          buttonScale={scale}
+          onPress={() => {
+            navigation.navigate('Map');
+          }}
+          children="Carte"
+        />
       </View>
     </ImageBackground>
   );
@@ -240,76 +149,21 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    // justifyContent: 'flex-end',
+    // alignItems: 'center',
   },
 
-  container: {
+  mainContainer: {
     flex: 1,
     // alignItems: 'center',
     // justifyContent: 'center',
-    paddingHorizontal: 20,
-  },
-
-  labelContainer: {
-    position: 'relative',
-    width: '100%',
-    height: '100%',
-    marginTop: 30,
-  },
-
-  messageBubble: {
-    paddingVertical: 18,
-    paddingHorizontal: 20,
-    borderRadius: 18,
-    width: '100%',
-    position: 'relative',
-  },
-
-  header: {
-    paddingTop: 100,
-    paddingBottom: 10,
+    borderColor: 'red',
+    borderWidth: 3,
   },
 
   compteButton: {
-    position: 'absolute',
-    top: 10,
-    left: 20,
     zIndex: 100,
-    width: 158, // Largeur fixe pour éviter le décalage lors du changement de texte
-  },
-
-  compteStatus: {
-    position: 'absolute',
-    top: 5,
-    left: 0,
-    marginTop: 40,
-    fontSize: 18,
-    fontWeight: '600',
-    fontStyle: 'italic',
-    color: '#5B9BD5',
-    textAlign: 'left',
-    zIndex: 100,
-  },
-
-  // Styles du composant PulsingButton (les tailles sont maintenant gérées dynamiquement)
-  buttonWrapper: {
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10,
-  },
-
-  pulseRing: {
-    position: 'absolute',
-  },
-
-  buttonCenter: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5, // Ombre pour Android
+    width: 170, // Largeur fixe pour éviter le décalage lors du changement de texte
   },
 
   infoBubble: {
