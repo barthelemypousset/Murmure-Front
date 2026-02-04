@@ -9,7 +9,6 @@ import ConfirmModal from '../../components/ConfirmModal';
 import { useState, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllChapters } from '../../reducers/chapters';
 
 import { Ionicons } from '@expo/vector-icons';
 import useResponsiveImagePosition from '../../hooks/useResponsiveImagePosition';
@@ -188,11 +187,10 @@ const styles = StyleSheet.create({
   messageBubble: {
     backgroundColor: '#D8F0E4',
     paddingVertical: 18,
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     borderRadius: 18,
     width: '70%',
     position: 'relative',
-    marginVertical: 15,
   },
   closeButton: {
     position: 'absolute',
@@ -219,7 +217,7 @@ const styles = StyleSheet.create({
   },
   perroquet: {
     position: 'absolute',
-    top: 60,
+    top: 40,
     right: 20,
     width: 100,
     height: 100,
@@ -239,7 +237,7 @@ const styles = StyleSheet.create({
 
   progressContainer: {
     position: 'absolute',
-    top: 160,
+    top: 130,
     width: '80%',
     alignSelf: 'center',
     backgroundColor: 'rgba(255,255,255,0.85)',

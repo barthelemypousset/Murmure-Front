@@ -5,11 +5,14 @@ import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Animated, Pl
 import { useSelector, useDispatch } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { setAllChapters } from '../../reducers/chapters';
+
 import Button from '../../components/Button';
 import ParrotChatBtn from '../../components/ParrotChatBtn'; // Bouton perroquet pour chat
 import PulsingButton from '../../components/PulsingButton';
 import useResponsiveImagePosition from '../../hooks/useResponsiveImagePosition';
 import InfoBubble from '../../components/InfoBulleHome';
+
 export default function HomeScreen({ navigation }) {
   const dispatch = useDispatch();
   const insets = useSafeAreaInsets();
@@ -157,8 +160,6 @@ const styles = StyleSheet.create({
     flex: 1,
     // alignItems: 'center',
     // justifyContent: 'center',
-    borderColor: 'red',
-    borderWidth: 3,
   },
 
   compteButton: {

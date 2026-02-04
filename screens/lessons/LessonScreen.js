@@ -201,7 +201,7 @@ export default function LessonScreen({ navigation, route }) {
       />
 
       {/* contentContainer: Top + marginTop dynamic en fonction de l'inset.top */}
-      <View style={[styles.contentContainer, { marginTop: Math.max(insets.top + 120, 20) }]}>
+      <View style={[styles.contentContainer, { marginTop: Math.max(insets.top + 120, 140) }]}>
         {(() => {
           switch (contentToDisplay) {
             case 'lesson':

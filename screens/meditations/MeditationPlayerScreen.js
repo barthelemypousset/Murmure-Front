@@ -193,16 +193,17 @@ export default function MeditationPlayer({ route, navigation }) {
 
   return (
     <ImageBackground
-      source={require("../../assets/meditation/meditationBkg.png")}
+      source={require('../../assets/meditation/meditationBkg.png')}
       style={styles.container}
+      resizeMode="cover"
     >
       {/* Loader activityIndicator pour mes méditations guidées */}
-      {loading && mode === "guidee" && (
+      {loading && mode === 'guidee' && (
         <ActivityIndicator size="large" color="#fff" /> //chargement
       )}
 
       {/* Player pour méditations guidées */}
-      {mode === "guidee" && !loading && (
+      {mode === 'guidee' && !loading && (
         <View style={styles.playerContainer}>
           <Text style={styles.title}>Méditation {theme}</Text>
           <Text style={styles.subtitle}>
@@ -212,12 +213,7 @@ export default function MeditationPlayer({ route, navigation }) {
           {/* Barre de progression */}
           <View style={styles.progressContainer}>
             <View style={styles.progressBarBackground}>
-              <View
-                style={[
-                  styles.progressBarFill,
-                  { width: `${progress * 100}%` },
-                ]}
-              />
+              <View style={[styles.progressBarFill, { width: `${progress * 100}%` }]} />
             </View>
             {/* Time restant et écoulé + formattage*/}
             <View style={styles.timeRow}>
@@ -237,33 +233,21 @@ export default function MeditationPlayer({ route, navigation }) {
       )}
 
       {/* Player pour méditations solo */}
-      {mode === "solo" && (
+      {mode === 'solo' && (
         <View style={styles.playerContainer}>
           <Text style={styles.title}>Méditation solo</Text>
           <Text style={styles.subtitle}>{duration} minutes</Text>
 
           {/* Timer */}
-          <Text style={styles.timerSoloText}>
-            {formatTime(totalSoloDuration - ecouleSolo)}
-          </Text>
+          <Text style={styles.timerSoloText}>{formatTime(totalSoloDuration - ecouleSolo)}</Text>
 
           {/* Progressbar Solo */}
           <View style={styles.progressSoloContainer}>
-            <View
-              style={[
-                styles.progressSoloBar,
-                { width: `${progressSolo * 100}%` },
-              ]}
-            />
+            <View style={[styles.progressSoloBar, { width: `${progressSolo * 100}%` }]} />
           </View>
 
           {!isPlaying ? (
-            <Pressable
-              style={styles.playPause}
-              onPress={
-                isSoloPlaying ? () => setIsSoloPlaying(false) : startSolo
-              }
-            >
+            <Pressable style={styles.playPause} onPress={isSoloPlaying ? () => setIsSoloPlaying(false) : startSolo}>
               {isSoloPlaying ? (
                 <Ionicons name="pause-circle" size={80} color="#eaeaeaff" />
               ) : (
@@ -271,10 +255,7 @@ export default function MeditationPlayer({ route, navigation }) {
               )}
             </Pressable>
           ) : (
-            <Pressable
-              style={styles.playPause}
-              onPress={() => setIsPlaying(false)}
-            >
+            <Pressable style={styles.playPause} onPress={() => setIsPlaying(false)}>
               <Text style={styles.playPauseText}>Pause</Text>
             </Pressable>
           )}
@@ -313,7 +294,7 @@ export default function MeditationPlayer({ route, navigation }) {
         visible={showExitPopup}
         message="Voulez-vous arrêter la méditation ?"
         onCancel={() => setShowExitPopup(false)}
-        onConfirm={mode === "solo" ? stopMeditationSolo : stopMeditation}
+        onConfirm={mode === 'solo' ? stopMeditationSolo : stopMeditation}
       />
 
       {/* Modale de congratulations 1 seul bouton à la fin de la méditation */}
@@ -323,7 +304,7 @@ export default function MeditationPlayer({ route, navigation }) {
         singleButton={true} //1 seul bouton
         onConfirm={() => {
           setShowCongrats(false);
-          navigation.navigate("Shelves");
+          navigation.navigate('Shelves');
         }}
       />
     </ImageBackground>
@@ -333,112 +314,114 @@ export default function MeditationPlayer({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
     padding: 20,
+    width: '100%',
+    height: '100%',
   },
 
   playerContainer: {
-    alignItems: "center",
+    alignItems: 'center',
     gap: 20,
   },
 
   title: {
     fontSize: 26,
-    fontWeight: "700",
-    color: "white", 
+    fontWeight: '700',
+    color: 'white',
   },
 
   subtitle: {
     fontSize: 18,
-    color: "#EEE", 
+    color: '#EEE',
   },
   // Progressbar et durée
   progressContainer: {
-    width: "80%",
-    alignSelf: "center",
+    width: '80%',
+    alignSelf: 'center',
     marginTop: 20,
   },
 
   progressBarBackground: {
     height: 8,
-    backgroundColor: "#ffffff55",
+    backgroundColor: '#ffffff55',
     borderRadius: 4,
-    overflow: "hidden",
+    overflow: 'hidden',
   },
 
   progressBarFill: {
-    height: "100%",
-    backgroundColor: "#fff",
+    height: '100%',
+    backgroundColor: '#fff',
   },
 
   timeRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginTop: 6,
   },
 
   timeText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 14,
-    fontWeight: "500",
+    fontWeight: '500',
     letterSpacing: 0.5,
   },
   // Meditation solo
 
   progressSoloContainer: {
-    width: "80%",
+    width: '80%',
     height: 8,
-    backgroundColor: "#ffffff55",
+    backgroundColor: '#ffffff55',
     borderRadius: 4,
-    overflow: "hidden",
+    overflow: 'hidden',
     marginTop: 10,
     marginBottom: 30,
   },
   timerSoloText: {
     fontSize: 48,
-    fontWeight: "700",
-    color: "#FFF",
+    fontWeight: '700',
+    color: '#FFF',
     marginTop: 40,
     marginBottom: 20,
     letterSpacing: 2,
-    textShadowColor: "rgba(0,0,0,0.3)",
+    textShadowColor: 'rgba(0,0,0,0.3)',
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
   },
   progressSoloBar: {
-    height: "100%",
-    backgroundColor: "#fff",
+    height: '100%',
+    backgroundColor: '#fff',
   },
 
   playPauseIcon: {
     fontSize: 42,
-    color: "#507C79",
+    color: '#507C79',
   },
 
   navigationContainer: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 40,
     left: 0,
     right: 0,
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingHorizontal: 30,
     zIndex: 10,
   },
 
   backButton: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 8,
     paddingVertical: 12,
     paddingHorizontal: 18,
     borderRadius: 10,
-    backgroundColor: "#d8f0e4cc",
+    backgroundColor: '#d8f0e4cc',
   },
 
   backButtonText: {
-    color: "#224c4aff",
+    color: '#224c4aff',
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
 });

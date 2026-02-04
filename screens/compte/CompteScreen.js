@@ -245,12 +245,6 @@ export default function CompteScreen({ navigation }) {
             </Pressable>
           </View>
         </View>
-
-        <Button
-          type="back"
-          onPress={() => navigation.navigate("Home")}
-          style={[styles.backButton, { top: insets.top + 10 }]}
-        />
   </ImageBackground>
   );
 }

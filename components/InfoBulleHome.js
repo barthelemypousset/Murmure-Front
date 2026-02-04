@@ -17,39 +17,32 @@ const InfoBubble = ({ message, visible, onClose }) => {
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 500,
-        useNativeDriver: true,
-      }).start(() => console.log('[InfoBubble] ✨ Animation apparition terminée'));
+        useNativeDriver: Platform.OS !== 'web',
+      }).start();
 
       // Auto-fermeture après 4 secondes
       console.log('[InfoBubble] ⏳ Démarrage du Timer (200s)');
       const timer = setTimeout(() => {
-        // console.log('[InfoBubble] ⏰ Timer écoulé -> Appel de onClose()');
         onClose();
       }, 200000); // 200 secondes nombre qui peut etre modifie pour la duree de l'infobulle
 
       // Fonction de nettoyage
       return () => {
-        // console.log('[InfoBubble]  Cleanup: Nettoyage du timer');
         clearTimeout(timer);
       };
     } else {
-      // console.log("[InfoBubble] l'infobulle disparait"),
-
       Animated.timing(fadeAnim, {
         toValue: 0,
         duration: 300,
-        useNativeDriver: true,
-      }).start(() => console.log("[InfoBubble] fin de la presence de l'infobulle"));
+        useNativeDriver: Platform.OS !== 'web',
+      }).start();
     }
   }, [visible]); // Dépendances du useEffect
 
   // LOGIQUE CRITIQUE ICI
   if (!visible) {
-    // console.log('[InfoBubble] ⛔ Erreur : Le composant ne s\'affiche pas . Rendu est "null".');
     return null;
   }
-
-  console.log('[InfoBubble] RENDER - Message:', message, 'Visible:', visible);
 
   return (
     <View style={styles.infoBubbleContainer}>
@@ -61,7 +54,6 @@ const InfoBubble = ({ message, visible, onClose }) => {
         {/* Bouton de fermeture */}
         <TouchableOpacity
           onPress={() => {
-            console.log("[InfoBubble] Clic utilisateur sur X -> Fermeture de l'infobulle");
             onClose();
           }}
           style={styles.closeButton}

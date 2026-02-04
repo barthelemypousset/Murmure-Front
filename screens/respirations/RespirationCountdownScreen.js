@@ -201,7 +201,7 @@ export default function RespirationCountdownScreen({ route, navigation }) {
     <ImageBackground
       source={require('../../assets/respiration/respirationBkg.png')}
       style={styles.container}
-      // defaultSource={require("../../assets/respiration/respirationBkg.png")}
+      resizeMode="cover"
     >
       <View style={styles.innerGlobal}>
         <Text style={styles.title}>Respiration</Text>
@@ -211,22 +211,13 @@ export default function RespirationCountdownScreen({ route, navigation }) {
         <Text style={styles.timer}>{formatTime(totalDuration - ecoule)}</Text>
 
         {/* animation*/}
-        <Animated.View
-          style={[styles.circle, { transform: [{ scale: scaleAnim }] }]}
-        >
-          <Text style={styles.phaseText}>
-            {phase === 'inspire' ? 'Inspire' : 'Expire'}
-          </Text>
+        <Animated.View style={[styles.circle, { transform: [{ scale: scaleAnim }] }]}>
+          <Text style={styles.phaseText}>{phase === 'inspire' ? 'Inspire' : 'Expire'}</Text>
         </Animated.View>
 
         {/* Progress bar */}
         <View style={styles.progressBarBackground}>
-          <View
-            style={[
-              styles.progressBarFill,
-              { width: `${(ecoule / totalDuration) * 100}%` },
-            ]}
-          />
+          <View style={[styles.progressBarFill, { width: `${(ecoule / totalDuration) * 100}%` }]} />
         </View>
 
         {/* Bouton Démarrer/pause/Arrêter */}
@@ -238,9 +229,7 @@ export default function RespirationCountdownScreen({ route, navigation }) {
               setIsPlaying(true);
             }}
           >
-            <Text style={styles.playText}>
-              {hasStarted ? 'Reprendre' : 'Démarrer'}
-            </Text>
+            <Text style={styles.playText}>{hasStarted ? 'Reprendre' : 'Démarrer'}</Text>
           </Pressable>
         ) : (
           <Pressable style={styles.playBtn} onPress={() => stopRespiration()}>
@@ -296,6 +285,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     resizeMode: 'cover',
+    width: '100%',
+    height: '100%',
   },
 
   innerGlobal: {

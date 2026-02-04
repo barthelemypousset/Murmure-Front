@@ -8,10 +8,8 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      
       "image": "./assets/paysage-bienvenue.png",
       "resizeMode": "cover"
-      
     },
     "ios": {
       "supportsTablet": true
@@ -25,6 +23,11 @@
     },
     "web": {
       "favicon": "./assets/perroquet.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2cc130cc-4e03-4120-9c7d-7c81c598843a"
+      }
     }
   }
 }
