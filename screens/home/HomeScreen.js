@@ -1,11 +1,12 @@
 import { BACKEND_ADDRESS } from '../../config';
 
-import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Animated, Platform } from 'react-native';
+import { useEffect, useState } from 'react';
+import { View, StyleSheet, ImageBackground, Platform } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { setAllChapters } from '../../reducers/chapters';
+import { logout } from '../../reducers/userConnection';
 
 import Button from '../../components/Button';
 import ParrotChatBtn from '../../components/ParrotChatBtn'; // Bouton perroquet pour chat
@@ -33,7 +34,7 @@ export default function HomeScreen({ navigation }) {
   const parrotPosX = Platform.OS === 'ios' ? 0.43 : 0.42;
   const posPerroquet = getPos(originalW * parrotPosX, originalH * parrotPosY);
 
-  const { isConnected, username } = useSelector((state) => state.userConnection); // Récupérer le statut de connexion depuis Redux
+  const { isConnected, username, userToken, progressNb } = useSelector((state) => state.userConnection); // Récupérer le statut de connexion depuis Redux
 
   const [infoBubble, setInfoBubble] = useState({ visible: false, message: '' }); // integration de l'infobulle
 
@@ -48,8 +49,8 @@ export default function HomeScreen({ navigation }) {
   /// FORMULE : Math.max(insets.top - 16, 10)
   /// EX: style={[styles.compteButton, { top: Math.max(insets.top - 16, 10), right: 50 }]}
 
+  // Chargement des chapitres depuis le backend
   useEffect(() => {
-    // Chargement des chapitres depuis le backend
     fetch(`${BACKEND_ADDRESS}/chapters/`)
       .then((res) => res.json())
       .then((data) => {
@@ -64,6 +65,39 @@ export default function HomeScreen({ navigation }) {
         // Gérer les erreurs de fetch
         console.log('❌ Fetch error, loading chaptersSafe', err);
       });
+  }, []);
+
+  // Try fake progress update to check if token is expired
+  useEffect(() => {
+    if (isConnected) {
+      async function fetcData() {
+        const response = await fetch(`${BACKEND_ADDRESS}/users/check`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userToken}`,
+          },
+        });
+        const data = await response.json();
+        if (data.result) {
+          console.log('Valid Token');
+        } else {
+          console.log('Error:', data.error);
+          // Supprimer le token de Redux
+          dispatch(logout());
+
+          // Supprimer le token d'AsyncStorage
+          AsyncStorage.removeItem('userToken')
+            .then(() => {
+              console.log("[Logout] ✅ Token supprimé d'AsyncStorage");
+            })
+            .catch((error) => {
+              console.error('[Logout] ❌ Erreur suppression token:', error);
+            });
+        }
+      }
+      fetcData();
+    }
   }, []);
 
   useEffect(() => {
@@ -92,7 +126,6 @@ export default function HomeScreen({ navigation }) {
   return (
     <ImageBackground style={styles.background} source={require('../../assets/homescreenCadre.png')} resizeMode="cover">
       <View style={[styles.mainContainer, { top: Math.max(insets.top - 16, 20) }]}>
-
         {/* InfoBulle */}
         <InfoBubble message={infoBubble.message} visible={infoBubble.visible} onClose={closeInfoBubble} />
 
