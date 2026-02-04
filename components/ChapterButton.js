@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
 
-export default function ChapterButton({ chapterNumber, progressNb, onPress, style }) {
+export default function ChapterButton({ chapterNumber, chapterName, progressNb, onPress, style }) {
   const imageSource =
     chapterNumber <= progressNb ? require('../assets/feudebois.png') : require('../assets/feusansfeu.png');
 
@@ -9,7 +9,7 @@ export default function ChapterButton({ chapterNumber, progressNb, onPress, styl
       <Image source={imageSource} style={styles.image} />
       <View style={styles.labelContainer}>
         <Text style={styles.label} numberOfLines={1}>
-          Chapitre {chapterNumber}
+          {chapterName}
         </Text>
       </View>
     </Pressable>
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: '#000000',
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: 'bold',
     fontStyle: 'italic',
   },

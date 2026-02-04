@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#222',
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'auto',
   },
   appContainer: {
     backgroundColor: 'white',
@@ -48,7 +49,6 @@ const styles = StyleSheet.create({
       ? {
           width: webDimension.width,
           height: webDimension.height,
-          overflow: 'hidden', // Prevents content from spilling out
         }
       : {}),
   },

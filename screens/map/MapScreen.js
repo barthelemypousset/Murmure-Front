@@ -27,12 +27,12 @@ export default function MapScreen({ navigation }) {
   const { getPos, scale, originalW, originalH } = useResponsiveImagePosition(backgroundImage);
 
   // Positions des chapitres en pourcentages de l'image originale
-  const posChapitre1 = getPos(originalW * 0.40, originalH * 0.87);
-  const posChapitre2 = getPos(originalW * 0.13, originalH * 0.76);
-  const posChapitre3 = getPos(originalW * 0.70, originalH * 0.65);
+  const posChapitre1 = getPos(originalW * 0.40, originalH * 0.85);
+  const posChapitre2 = getPos(originalW * 0.08, originalH * 0.76);
+  const posChapitre3 = getPos(originalW * 0.40, originalH * 0.71);
   const posChapitre4 = getPos(originalW * 0.2, originalH * 0.6);
-  const posChapitre5 = getPos(originalW * 0.34, originalH * 0.47);
-  const posChapitre6 = getPos(originalW * 0.60, originalH * 0.35);
+  const posChapitre5 = getPos(originalW * 0.34, originalH * 0.45);
+  const posChapitre6 = getPos(originalW * 0.45, originalH * 0.35);
 
   // Récupérer le progressNb et le statut de connexion de l'utilisateur depuis Redux
   const userProgressNb = useSelector((state) => state.userConnection?.userProgress || 0);
@@ -96,6 +96,7 @@ export default function MapScreen({ navigation }) {
       <View style={styles.container}>
         <ChapterButton
           chapterNumber={6}
+          chapterName="Zone de controle"
           progressNb={userProgressNb}
           onPress={() => handleChapterPress(6, 5)}
           style={posChapitre6}
@@ -103,6 +104,7 @@ export default function MapScreen({ navigation }) {
 
         <ChapterButton
           chapterNumber={5}
+          chapterName="Ta sécuritée interieur"
           progressNb={userProgressNb}
           onPress={() => handleChapterPress(5, 4)}
           style={posChapitre5}
@@ -110,6 +112,7 @@ export default function MapScreen({ navigation }) {
 
         <ChapterButton
           chapterNumber={4}
+          chapterName="Qu'est ce que l'anxiété ?"
           progressNb={userProgressNb}
           onPress={() => handleChapterPress(4, 3)}
           style={posChapitre4}
@@ -117,6 +120,7 @@ export default function MapScreen({ navigation }) {
 
         <ChapterButton
           chapterNumber={3}
+          chapterName="Ton cerveau, tes emotions"
           progressNb={userProgressNb}
           onPress={() => handleChapterPress(3, 2)}
           style={posChapitre3}
@@ -124,6 +128,7 @@ export default function MapScreen({ navigation }) {
 
         <ChapterButton
           chapterNumber={2}
+          chapterName="Le lacher prise"
           progressNb={userProgressNb}
           onPress={() => handleChapterPress(2, 1)}
           style={posChapitre2}
@@ -131,6 +136,7 @@ export default function MapScreen({ navigation }) {
 
         <ChapterButton
           chapterNumber={1}
+          chapterName="L'instant present"
           progressNb={userProgressNb}
           onPress={() => handleChapterPress(1, 0)}
           style={posChapitre1}
@@ -186,7 +192,7 @@ const styles = StyleSheet.create({
   },
   messageBubble: {
     backgroundColor: '#D8F0E4',
-    paddingVertical: 18,
+    paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 18,
     width: '70%',
